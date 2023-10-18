@@ -20,4 +20,9 @@ export default class King extends Piece {
 
         return moves;
     }
+
+
+    protected isKing(): boolean {
+        return true;
+    }
 }

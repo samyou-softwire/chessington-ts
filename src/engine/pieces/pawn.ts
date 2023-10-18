@@ -14,12 +14,12 @@ export default class Pawn extends Piece {
 
         if (this.player === Player.WHITE)
             if (square.row === 1)
-                this.project(moves, square, 0, 1, board, 2);
-            else this.project(moves, square, 0, 1, board, 1);
+                this.project(moves, square, 0, 1, board, { maxLength: 2, canCapture: false });
+            else this.project(moves, square, 0, 1, board, { maxLength: 1, canCapture: false });
         else
             if (square.row === 6)
-                this.project(moves, square, 0, 1, board, 2);
-            else this.project(moves, square, 0, 1, board, 1);
+                this.project(moves, square, 0, 1, board, { maxLength: 2, canCapture: false });
+            else this.project(moves, square, 0, 1, board, { maxLength: 1, canCapture: false });
 
         return moves;
     }
