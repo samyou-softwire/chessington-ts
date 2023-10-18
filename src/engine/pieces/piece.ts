@@ -18,20 +18,25 @@ export default class Piece {
         board.movePiece(currentSquare, newSquare);
     }
 
-    protected tryAdd(moves: Square[], square: Square, board: Board, canCapture: boolean = true): boolean {
+    protected tryAdd(moves: Square[], square: Square, board: Board, options: {
+        canCapture?: boolean,
+        needsCapture?: boolean
+    } = {}): boolean {
         if (square.row >= 0 && square.col >= 0 && square.row <= 7 && square.col <= 7) {
             const piece = board.getPiece(square);
 
             if (piece) {
-                if (piece.player !== this.player && canCapture && !piece.isKing()) {
+                if (piece.player !== this.player && (options.canCapture === undefined || options.canCapture) && !piece.isKing()) {
                     moves.push(square);
                     return false; // add move (capture) but stop projecting
                 } else {
                     return false; // no add move and stop projecting
                 }
             } else {
-                moves.push(square); // add move and keep projecting
-                return true;
+                if (!options.needsCapture) { // if specified can only capture
+                    moves.push(square); // add move and keep projecting
+                    return true;
+                }
             }
         }
 
@@ -40,7 +45,8 @@ export default class Piece {
 
     protected project(moves: Square[], square: Square, dx: number, dy: number, board: Board, options: {
         maxLength?: number,
-        canCapture?: boolean
+        canCapture?: boolean,
+        needsCapture?: boolean
     } = {}) {
         let length = 1;
         let yFacing = this.player === Player.WHITE ? 1 : -1; // reverse moves if black
@@ -49,7 +55,7 @@ export default class Piece {
             const result = this.tryAdd(moves, Square.at(
                 square.row + dy * length * yFacing,
                 square.col + dx * length
-            ), board, options.canCapture);
+            ), board, options);
 
             if (!result) break;
 
