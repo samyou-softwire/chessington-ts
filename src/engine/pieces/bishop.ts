@@ -12,12 +12,10 @@ export default class Bishop extends Piece {
         const moves: Square[] = [];
         const square = board.findPiece(this);
 
-        for (let i = 1; i < 7; i++) {
-            this.tryAdd(moves, Square.at(square.row + i, square.col + i), board);
-            this.tryAdd(moves, Square.at(square.row - i, square.col + i), board);
-            this.tryAdd(moves, Square.at(square.row - i, square.col - i), board);
-            this.tryAdd(moves, Square.at(square.row + i, square.col - i), board);
-        }
+        this.project(moves, square, 1, 1, board);
+        this.project(moves, square, 1, -1, board);
+        this.project(moves, square, -1, -1, board);
+        this.project(moves, square, -1, 1, board);
 
         return moves;
     }
