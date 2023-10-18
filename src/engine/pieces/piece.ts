@@ -30,9 +30,9 @@ export default class Piece {
         return false;
     }
 
-    protected project(moves: Square[], square: Square, dx: number, dy: number, player: Player, board: Board, maxLength?: number) {
+    protected project(moves: Square[], square: Square, dx: number, dy: number, board: Board, maxLength?: number) {
         let length = 1;
-        let yFacing = player === Player.WHITE ? 1 : -1; // reverse moves if black
+        let yFacing = this.player === Player.WHITE ? 1 : -1; // reverse moves if black
 
         while (!maxLength || length <= maxLength) {
             const result = this.tryAdd(moves, Square.at(
