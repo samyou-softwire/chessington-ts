@@ -13,6 +13,8 @@ export default class Piece {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 
+    public postMove(board: Board) {}
+
     public moveTo(board: Board, move: Move | Square) {
         if ("to" in move) { // it's a move
             board.movePiece(move);

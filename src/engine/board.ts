@@ -38,7 +38,8 @@ export default class Board {
         if (movingPiece && movingPiece.player === this.currentPlayer) {
             this.setPiece(move.to, movingPiece);
             this.setPiece(move.from, undefined);
-            if (move.special) move.special(movingPiece, this);
+            movingPiece.postMove(this); // actions specific to this piece
+            if (move.special) move.special(movingPiece, this); // actions specific to this move
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
             this.move++;
         }
