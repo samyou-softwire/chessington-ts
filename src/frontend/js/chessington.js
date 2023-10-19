@@ -77,6 +77,16 @@ function onDrop(source, target) {
 }
 
 function updateStatus() {
+    boardUI = ChessBoard(
+        'chess-board',
+        {
+            showNotation: false,
+            draggable: true,
+            position: boardToPositionObject(board),
+            onDragStart: onDragStart,
+            onDrop: onDrop
+        }
+    );
     const player = board.currentPlayer === Player.WHITE ? 'White' : 'Black';
     document.getElementById('turn-status').innerHTML = `${player} to move`;
     document.getElementById('turn-count').innerHTML = `Turn ${board.move}`;
@@ -116,15 +126,5 @@ function boardInStartingPosition() {
 
 export function createChessBoard() {
     board = boardInStartingPosition();
-    boardUI = ChessBoard(
-        'chess-board', 
-        {
-            showNotation: false,
-            draggable: true,
-            position: boardToPositionObject(board),
-            onDragStart: onDragStart,
-            onDrop: onDrop
-        }
-    );
     updateStatus();
 }
