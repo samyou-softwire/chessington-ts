@@ -17,4 +17,9 @@ export default class Piece {
         const currentSquare = board.findPiece(this);
         board.movePiece(currentSquare, newSquare);
     }
+
+    protected tryAdd(moves: Square[], square: Square) {
+        if (square.row >= 0 && square.col >= 0 && square.row <= 7 && square.col <= 7)
+            moves.push(square);
+    }
 }
