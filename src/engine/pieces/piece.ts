@@ -13,6 +13,8 @@ export default class Piece {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 
+    public postMove(board: Board): void {}
+
     public moveTo(board: Board, move: Move | Square) {
         if ("to" in move) { // it's a move
             board.movePiece(move);
@@ -57,7 +59,7 @@ export default class Piece {
         needsCapture?: boolean
     } = {}) {
         let length = 1;
-        let yFacing = this.player === Player.WHITE ? 1 : -1; // reverse moves if black
+        let yFacing = this.getYFacing();
 
         while (!options.maxLength || length <= options.maxLength) {
             const result = this.tryAdd(moves, Square.at(
@@ -73,6 +75,10 @@ export default class Piece {
 
     protected isKing() {
         return false;
+    }
+
+    protected getYFacing() {
+        return this.player === Player.WHITE ? 1 : -1; // reverse moves if black
     }
 }
 

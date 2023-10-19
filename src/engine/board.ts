@@ -35,14 +35,13 @@ export default class Board {
 
     public movePiece(move: Move) {
         const movingPiece = this.getPiece(move.from);
-        if (!!movingPiece && movingPiece.player === this.currentPlayer) {
+        if (movingPiece && movingPiece.player === this.currentPlayer) {
             this.setPiece(move.to, movingPiece);
             this.setPiece(move.from, undefined);
-            if (move.capture) this.setPiece(move.to, undefined);
+            if (move.capture) this.setPiece(move.capture, undefined);
+            movingPiece.postMove(this);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
-            if (this.currentPlayer === Player.WHITE) {
-                this.move++; // next move
-            }
+            this.move++;
         }
     }
 
