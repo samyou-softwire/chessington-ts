@@ -1,26 +1,31 @@
-import Piece from './piece';
+import Piece, {Move} from './piece';
 import Player from '../player';
 import Board from '../board';
-import Square from "../square";
+import player from "../player";
 
 export default class Rook extends Piece {
+    moved: boolean
+
     public constructor(player: Player) {
         super(player);
+
+        this.moved = false;
     }
 
     public getAvailableMoves(board: Board) {
         const square = board.findPiece(this);
 
-        const moves = [];
+        const moves: Move[] = [];
 
-        for (let row = 0; row < 8; row++)
-            if (row !== square.row)
-                moves.push(Square.at(row, square.col));
-
-        for (let col = 0; col < 8; col++)
-            if (col !== square.col)
-                moves.push(Square.at(square.row, col));
+        this.project(moves, square, 1, 0, board);
+        this.project(moves, square, 0, 1, board);
+        this.project(moves, square, 0, -1, board);
+        this.project(moves, square, -1, 0, board);
 
         return moves;
+    }
+
+    postMove(board: Board) {
+        this.moved = true;
     }
 }
