@@ -27,7 +27,8 @@ export default class Piece {
             if (foundMove) {
                 this.moveTo(board, foundMove)
             } else {
-                throw Error("could not move to this square!");
+                const fromSquare = board.findPiece(this);
+                this.moveTo(board, {from: fromSquare, to: square});
             }
         }
     }
