@@ -17,7 +17,7 @@ describe('Pawn', () => {
             board.setPiece(Square.at(1, 0), pawn);
             pawn.moveTo(board, Square.at(2, 0));
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.have.length(1);
             moves.should.deep.include(Square.at(3, 0));
@@ -27,7 +27,7 @@ describe('Pawn', () => {
             const pawn = new Pawn(Player.WHITE);
             board.setPiece(Square.at(1, 7), pawn);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.have.length(2);
             moves.should.deep.include.members([Square.at(2, 7), Square.at(3, 7)]);
@@ -37,7 +37,7 @@ describe('Pawn', () => {
             const pawn = new Pawn(Player.WHITE);
             board.setPiece(Square.at(7, 3), pawn);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.be.empty;
         });
@@ -48,7 +48,7 @@ describe('Pawn', () => {
             board.setPiece(Square.at(4, 4), pawn);
             board.setPiece(Square.at(5, 3), opposingPiece);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.deep.include(Square.at(5, 3));
         });
@@ -57,7 +57,7 @@ describe('Pawn', () => {
             const pawn = new Pawn(Player.WHITE);
             board.setPiece(Square.at(4, 4), pawn);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(5, 3));
         });
@@ -68,7 +68,7 @@ describe('Pawn', () => {
             board.setPiece(Square.at(4, 4), pawn);
             board.setPiece(Square.at(5, 3), friendlyPiece);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(5, 3));
         });
@@ -79,7 +79,7 @@ describe('Pawn', () => {
             board.setPiece(Square.at(4, 4), pawn);
             board.setPiece(Square.at(5, 3), opposingKing);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(5, 3));
         });
@@ -97,7 +97,10 @@ describe('Pawn', () => {
 
             const moves = pawn.getAvailableMoves(board);
 
-            moves.should.deep.include(Square.at(5, 6));
+            moves.should.deep.include({
+                to: Square.at(5, 6),
+                capture: Square.at(4, 6)
+            });
         });
 
         it('cant take en passant after a move', () => {
@@ -117,7 +120,7 @@ describe('Pawn', () => {
             king.moveTo(board, Square.at(1, 0));
             opposingKing.moveTo(board, Square.at(6, 0));
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(5, 6));
         });
@@ -133,7 +136,7 @@ describe('Pawn', () => {
 
             opposingPawn.moveTo(board, Square.at(4, 6)); // move forwards 1 square
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(5, 6));
         });
@@ -149,7 +152,7 @@ describe('Pawn', () => {
             board.setPiece(Square.at(6, 0), pawn);
             pawn.moveTo(board, Square.at(5, 0));
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.have.length(1);
             moves.should.deep.include(Square.at(4, 0));
@@ -159,7 +162,7 @@ describe('Pawn', () => {
             const pawn = new Pawn(Player.BLACK);
             board.setPiece(Square.at(6, 7), pawn);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.have.length(2);
             moves.should.deep.include.members([Square.at(4, 7), Square.at(5, 7)]);
@@ -169,7 +172,7 @@ describe('Pawn', () => {
             const pawn = new Pawn(Player.BLACK);
             board.setPiece(Square.at(0, 3), pawn);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.be.empty;
         });
@@ -180,7 +183,7 @@ describe('Pawn', () => {
             board.setPiece(Square.at(4, 4), pawn);
             board.setPiece(Square.at(3, 3), opposingPiece);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.deep.include(Square.at(3, 3));
         });
@@ -189,7 +192,7 @@ describe('Pawn', () => {
             const pawn = new Pawn(Player.BLACK);
             board.setPiece(Square.at(4, 4), pawn);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(3, 3));
         });
@@ -200,7 +203,7 @@ describe('Pawn', () => {
             board.setPiece(Square.at(4, 4), pawn);
             board.setPiece(Square.at(3, 3), friendlyPiece);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(3, 3));
         });
@@ -211,7 +214,7 @@ describe('Pawn', () => {
             board.setPiece(Square.at(4, 4), pawn);
             board.setPiece(Square.at(3, 3), opposingKing);
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(3, 3));
         });
@@ -229,7 +232,10 @@ describe('Pawn', () => {
 
             const moves = pawn.getAvailableMoves(board);
 
-            moves.should.deep.include(Square.at(2, 1));
+            moves.should.deep.include({
+                to: Square.at(2, 1),
+                capture: Square.at(3, 1)
+            });
         });
 
         it('cant take en passant after a move', () => {
@@ -249,7 +255,7 @@ describe('Pawn', () => {
             king.moveTo(board, Square.at(6, 7));
             opposingKing.moveTo(board, Square.at(1, 7));
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(2, 1));
         });
@@ -265,7 +271,7 @@ describe('Pawn', () => {
 
             opposingPawn.moveTo(board, Square.at(3, 1)); // move forwards 1 square
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
             moves.should.not.deep.include(Square.at(2, 1));
         });
@@ -277,7 +283,7 @@ describe('Pawn', () => {
         board.setPiece(Square.at(6, 3), pawn);
         board.setPiece(Square.at(5, 3), blockingPiece);
 
-        const moves = pawn.getAvailableMoves(board);
+        const moves = pawn.getAvailableMoveTos(board);
 
         moves.should.be.empty;
     });
@@ -288,7 +294,7 @@ describe('Pawn', () => {
         board.setPiece(Square.at(6, 3), pawn);
         board.setPiece(Square.at(4, 3), blockingPiece);
 
-        const moves = pawn.getAvailableMoves(board);
+        const moves = pawn.getAvailableMoveTos(board);
 
         moves.should.not.deep.include(Square.at(4, 3));
     });

@@ -9,7 +9,7 @@ export default class Piece {
         this.player = player;
     }
 
-    public getAvailableMoves(board: Board) {
+    public getAvailableMoves(board: Board): Move[] {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 
@@ -18,7 +18,11 @@ export default class Piece {
         board.movePiece(currentSquare, newSquare);
     }
 
-    protected tryAdd(moves: Square[], square: Square, board: Board, options: {
+    public getAvailableMoveTos(board: Board): Square[] {
+        return this.getAvailableMoves(board).map(move => move.to);
+    }
+
+    protected tryAdd(moves: Move[], square: Square, board: Board, options: {
         canCapture?: boolean,
         needsCapture?: boolean
     } = {}): boolean {
@@ -27,14 +31,14 @@ export default class Piece {
 
             if (piece) {
                 if (piece.player !== this.player && (options.canCapture === undefined || options.canCapture) && !piece.isKing()) {
-                    moves.push(square);
+                    moves.push({to: square});
                     return false; // add move (capture) but stop projecting
                 } else {
                     return false; // no add move and stop projecting
                 }
             } else {
                 if (!options.needsCapture) { // if specified can only capture
-                    moves.push(square); // add move and keep projecting
+                    moves.push({to: square}); // add move and keep projecting
                     return true;
                 }
             }
@@ -43,7 +47,7 @@ export default class Piece {
         return false;
     }
 
-    protected project(moves: Square[], square: Square, dx: number, dy: number, board: Board, options: {
+    protected project(moves: Move[], square: Square, dx: number, dy: number, board: Board, options: {
         maxLength?: number,
         canCapture?: boolean,
         needsCapture?: boolean
@@ -66,4 +70,9 @@ export default class Piece {
     protected isKing() {
         return false;
     }
+}
+
+export interface Move {
+    to: Square,
+    capture?: Square
 }

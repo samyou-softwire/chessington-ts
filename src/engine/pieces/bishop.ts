@@ -1,7 +1,6 @@
-import Piece from './piece';
+import Piece, {Move} from './piece';
 import Player from '../player';
 import Board from '../board';
-import Square from "../square";
 
 export default class Bishop extends Piece {
     public constructor(player: Player) {
@@ -9,7 +8,7 @@ export default class Bishop extends Piece {
     }
 
     public getAvailableMoves(board: Board) {
-        const moves: Square[] = [];
+        const moves: Move[] = [];
         const square = board.findPiece(this);
 
         this.project(moves, square, 1, 1, board);
