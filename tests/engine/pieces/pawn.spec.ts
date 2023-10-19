@@ -96,13 +96,9 @@ describe('Pawn', () => {
 
             opposingPawn.moveTo(board, Square.at(4, 6)); // move forwards 2 squares
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
-            moves.should.deep.include({
-                from: Square.at(4, 5),
-                to: Square.at(5, 6),
-                capture: Square.at(4, 6)
-            });
+            moves.should.deep.include(Square.at(5, 6));
         });
 
         it('cannot take en passant after a move', () => {
@@ -122,13 +118,9 @@ describe('Pawn', () => {
             king.moveTo(board, Square.at(1, 0));
             opposingKing.moveTo(board, Square.at(6, 0));
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
-            moves.should.not.deep.include({
-                from: Square.at(4, 5),
-                to: Square.at(5, 6),
-                capture: Square.at(4, 6)
-            });
+            moves.should.not.deep.include(Square.at(5, 6));
         });
 
         it('cannot take en passant if no double', () => {
@@ -146,13 +138,9 @@ describe('Pawn', () => {
             king.moveTo(board, Square.at(1, 0));         // waste a move
             opposingPawn.moveTo(board, Square.at(4, 6)); // move forwards 1 square
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
-            moves.should.not.deep.include({
-                from: Square.at(4, 5),
-                to: Square.at(5, 6),
-                capture: Square.at(4, 6)
-            });
+            moves.should.not.deep.include(Square.at(5, 6));
         });
 
         it('removes other pawn from the board', () => {
@@ -166,11 +154,12 @@ describe('Pawn', () => {
 
             opposingPawn.moveTo(board, Square.at(4, 6)); // move forwards 2 squares
 
-            pawn.moveTo(board, { // play en passant
-                from: Square.at(4, 5),
-                to: Square.at(5, 6),
-                capture: Square.at(4, 6)
-            });
+            const moves = pawn.getAvailableMoves(board);
+            const passantMove = moves.find(move => move.to.equals(Square.at(5, 6)));
+
+            if (passantMove) {
+                pawn.moveTo(board, passantMove);
+            }
 
             const maybePawn = board.getPiece(Square.at(4, 6));
 
@@ -266,13 +255,9 @@ describe('Pawn', () => {
 
             opposingPawn.moveTo(board, Square.at(3, 1)); // move forwards 2 squares
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
-            moves.should.deep.include({
-                from: Square.at(3, 2),
-                to: Square.at(2, 1),
-                capture: Square.at(3, 1)
-            });
+            moves.should.deep.include(Square.at(2, 1));
         });
 
         it('cannot take en passant after a move', () => {
@@ -292,13 +277,9 @@ describe('Pawn', () => {
             king.moveTo(board, Square.at(6, 7));
             opposingKing.moveTo(board, Square.at(1, 7));
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
-            moves.should.not.deep.include({
-                from: Square.at(3, 2),
-                to: Square.at(2, 1),
-                capture: Square.at(3, 1)
-            });
+            moves.should.not.deep.include(Square.at(2, 1));
         });
 
         it('cannot take en passant if no double', () => {
@@ -316,13 +297,9 @@ describe('Pawn', () => {
             king.moveTo(board, Square.at(6, 7));         // waste a move
             opposingPawn.moveTo(board, Square.at(3, 1)); // move forwards 1 square
 
-            const moves = pawn.getAvailableMoves(board);
+            const moves = pawn.getAvailableMoveTos(board);
 
-            moves.should.not.deep.include({
-                from: Square.at(3, 2),
-                to: Square.at(2, 1),
-                capture: Square.at(3, 1)
-            });
+            moves.should.not.deep.include(Square.at(2, 1));
         });
 
         it('removes other pawn from the board', () => {
@@ -336,11 +313,12 @@ describe('Pawn', () => {
 
             opposingPawn.moveTo(board, Square.at(3, 1)); // move forwards 2 squares
 
-            pawn.moveTo(board, {
-                from: Square.at(3, 2),
-                to: Square.at(2, 1),
-                capture: Square.at(3, 1)
-            });
+            const moves = pawn.getAvailableMoves(board);
+            const passantMove = moves.find(move => move.to.equals(Square.at(2, 1)));
+
+            if (passantMove) {
+                pawn.moveTo(board, passantMove);
+            }
 
             const maybePawn = board.getPiece(Square.at(3, 1));
 

@@ -18,19 +18,19 @@ export default class Pawn extends Piece {
 
         if (this.player === Player.WHITE) {
             if (square.row === 1)
-                this.project(moves, square, 0, 1, board, {maxLength: 2, canCapture: false});
-            else this.project(moves, square, 0, 1, board, {maxLength: 1, canCapture: false});
+                this.project(moves, square, 0, 1, board, {maxLength: 2, canCapture: false, special: markMove});
+            else this.project(moves, square, 0, 1, board, {maxLength: 1, canCapture: false, special: markMove});
 
-            this.project(moves, square, 1, 1, board, { maxLength: 1, needsCapture: true });
-            this.project(moves, square, -1, 1, board, { maxLength: 1, needsCapture: true });
+            this.project(moves, square, 1, 1, board, { maxLength: 1, needsCapture: true, special: markMove });
+            this.project(moves, square, -1, 1, board, { maxLength: 1, needsCapture: true, special: markMove });
         }
         else {
             if (square.row === 6)
-                this.project(moves, square, 0, 1, board, {maxLength: 2, canCapture: false});
-            else this.project(moves, square, 0, 1, board, {maxLength: 1, canCapture: false});
+                this.project(moves, square, 0, 1, board, {maxLength: 2, canCapture: false, special: markMove});
+            else this.project(moves, square, 0, 1, board, {maxLength: 1, canCapture: false, special: markMove});
 
-            this.project(moves, square, 1, 1, board, { maxLength: 1, needsCapture: true });
-            this.project(moves, square, -1, 1, board, { maxLength: 1, needsCapture: true });
+            this.project(moves, square, 1, 1, board, { maxLength: 1, needsCapture: true, special: markMove });
+            this.project(moves, square, -1, 1, board, { maxLength: 1, needsCapture: true, special: markMove });
         }
 
         this.checkPassant(moves, Square.at(square.row, square.col + 1), board);
@@ -50,14 +50,16 @@ export default class Pawn extends Piece {
                 moves.push({
                     to: Square.at(toSquare.row + yFacing, toSquare.col),
                     from: square,
-                    capture: toSquare
+                    special: (_, board) => {
+                        board.setPiece(toSquare, undefined); // remove the pawn (it's not overwritten)
+                    }
                 });
             }
         }
     }
+}
 
-    postMove(board: Board) {
-        if (this.firstTouched === -1)
-            this.firstTouched = board.move;
-    }
+function markMove(piece: Piece, board: Board) {
+    if (piece instanceof Pawn && piece.firstTouched === -1)
+        piece.firstTouched = board.move;
 }

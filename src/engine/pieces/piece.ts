@@ -13,14 +13,20 @@ export default class Piece {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 
-    public postMove(board: Board): void {}
-
     public moveTo(board: Board, move: Move | Square) {
         if ("to" in move) { // it's a move
             board.movePiece(move);
         } else { // it's a square
-            const currentSquare = board.findPiece(this);
-            this.moveTo(board, {from: currentSquare, to: move})
+            // so try to find a move to that square
+            const moves = this.getAvailableMoves(board);
+            const square = move;
+            const foundMove = moves.find(move => move.to.equals(square));
+
+            if (foundMove) {
+                this.moveTo(board, foundMove)
+            } else {
+                throw Error("could not move to this square!");
+            }
         }
     }
 
@@ -30,21 +36,22 @@ export default class Piece {
 
     protected tryAdd(moves: Move[], square: Square, from: Square, board: Board, options: {
         canCapture?: boolean,
-        needsCapture?: boolean
+        needsCapture?: boolean,
+        special?: (piece: Piece, board: Board) => void
     } = {}): boolean {
         if (square.row >= 0 && square.col >= 0 && square.row <= 7 && square.col <= 7) {
             const piece = board.getPiece(square);
 
             if (piece) {
                 if (piece.player !== this.player && (options.canCapture === undefined || options.canCapture) && !piece.isKing()) {
-                    moves.push({from: from, to: square});
+                    moves.push({from: from, to: square, special: options.special});
                     return false; // add move (capture) but stop projecting
                 } else {
                     return false; // no add move and stop projecting
                 }
             } else {
                 if (!options.needsCapture) { // if specified can only capture
-                    moves.push({from: from, to: square}); // add move and keep projecting
+                    moves.push({from: from, to: square, special: options.special}); // add move and keep projecting
                     return true;
                 }
             }
@@ -56,7 +63,8 @@ export default class Piece {
     protected project(moves: Move[], square: Square, dx: number, dy: number, board: Board, options: {
         maxLength?: number,
         canCapture?: boolean,
-        needsCapture?: boolean
+        needsCapture?: boolean,
+        special?: (piece: Piece, board: Board) => void
     } = {}) {
         let length = 1;
         let yFacing = this.getYFacing();
@@ -85,5 +93,5 @@ export default class Piece {
 export interface Move {
     from: Square,
     to: Square,
-    capture?: Square
+    special?: (piece: Piece, board: Board) => void
 }
