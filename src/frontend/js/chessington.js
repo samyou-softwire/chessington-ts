@@ -64,11 +64,15 @@ function onDrop(source, target) {
     const fromSquare = positionStringToSquare(source);
     const toSquare = positionStringToSquare(target);
     const pieceToMove = board.getPiece(fromSquare);
+    const foundMoves = pieceToMove.getAvailableMoves(board).filter(move => move.to.equals(toSquare));
     
-    if (!pieceToMove || !pieceToMove.getAvailableMoves(board).some(square => square.equals(toSquare))) {
+    if (!pieceToMove || foundMoves.length === 0) {
         return 'snapback';
     }
-    pieceToMove.moveTo(board, toSquare);
+
+    const move = foundMoves[0]; // it should only ever find one anyway
+
+    pieceToMove.moveTo(board, move);
     updateStatus();
 }
 

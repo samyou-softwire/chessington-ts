@@ -13,9 +13,9 @@ export default class Piece {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 
-    public moveTo(board: Board, newSquare: Square) {
+    public moveTo(board: Board, move: Move) {
         const currentSquare = board.findPiece(this);
-        board.movePiece(currentSquare, newSquare);
+        board.movePiece(currentSquare, move);
     }
 
     public getAvailableMoveTos(board: Board): Square[] {

@@ -1,7 +1,7 @@
 import Player from './player';
 import GameSettings from './gameSettings';
 import Square from './square';
-import Piece from './pieces/piece';
+import Piece, {Move} from './pieces/piece';
 
 export default class Board {
     public currentPlayer: Player;
@@ -31,11 +31,12 @@ export default class Board {
         throw new Error('The supplied piece is not on the board');
     }
 
-    public movePiece(fromSquare: Square, toSquare: Square) {
+    public movePiece(fromSquare: Square, move: Move) {
         const movingPiece = this.getPiece(fromSquare);        
         if (!!movingPiece && movingPiece.player === this.currentPlayer) {
-            this.setPiece(toSquare, movingPiece);
+            this.setPiece(move.to, movingPiece);
             this.setPiece(fromSquare, undefined);
+            if (move.capture) this.setPiece(move.to, undefined);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
         }
     }
