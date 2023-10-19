@@ -5,11 +5,13 @@ import Piece, {Move} from './pieces/piece';
 
 export default class Board {
     public currentPlayer: Player;
+    public move: number;
     private readonly board: (Piece | undefined)[][];
 
     public constructor(currentPlayer?: Player) {
         this.currentPlayer = currentPlayer ? currentPlayer : Player.WHITE;
         this.board = this.createBoard();
+        this.move = 0;
     }
 
     public setPiece(square: Square, piece: Piece | undefined) {
@@ -38,6 +40,9 @@ export default class Board {
             this.setPiece(move.from, undefined);
             if (move.capture) this.setPiece(move.to, undefined);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
+            if (this.currentPlayer === Player.WHITE) {
+                this.move++; // next move
+            }
         }
     }
 
