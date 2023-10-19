@@ -13,16 +13,20 @@ export default class Piece {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 
-    public moveTo(board: Board, move: Move) {
-        const currentSquare = board.findPiece(this);
-        board.movePiece(currentSquare, move);
+    public moveTo(board: Board, move: Move | Square) {
+        if ("to" in move) { // it's a move
+            board.movePiece(move);
+        } else { // it's a square
+            const currentSquare = board.findPiece(this);
+            this.moveTo(board, {from: currentSquare, to: move})
+        }
     }
 
     public getAvailableMoveTos(board: Board): Square[] {
         return this.getAvailableMoves(board).map(move => move.to);
     }
 
-    protected tryAdd(moves: Move[], square: Square, board: Board, options: {
+    protected tryAdd(moves: Move[], square: Square, from: Square, board: Board, options: {
         canCapture?: boolean,
         needsCapture?: boolean
     } = {}): boolean {
@@ -31,14 +35,14 @@ export default class Piece {
 
             if (piece) {
                 if (piece.player !== this.player && (options.canCapture === undefined || options.canCapture) && !piece.isKing()) {
-                    moves.push({to: square});
+                    moves.push({from: from, to: square});
                     return false; // add move (capture) but stop projecting
                 } else {
                     return false; // no add move and stop projecting
                 }
             } else {
                 if (!options.needsCapture) { // if specified can only capture
-                    moves.push({to: square}); // add move and keep projecting
+                    moves.push({from: from, to: square}); // add move and keep projecting
                     return true;
                 }
             }
@@ -59,7 +63,7 @@ export default class Piece {
             const result = this.tryAdd(moves, Square.at(
                 square.row + dy * length * yFacing,
                 square.col + dx * length
-            ), board, options);
+            ), square, board, options);
 
             if (!result) break;
 
@@ -73,6 +77,7 @@ export default class Piece {
 }
 
 export interface Move {
+    from: Square,
     to: Square,
     capture?: Square
 }

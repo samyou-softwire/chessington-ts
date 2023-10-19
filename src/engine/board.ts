@@ -31,11 +31,11 @@ export default class Board {
         throw new Error('The supplied piece is not on the board');
     }
 
-    public movePiece(fromSquare: Square, move: Move) {
-        const movingPiece = this.getPiece(fromSquare);        
+    public movePiece(move: Move) {
+        const movingPiece = this.getPiece(move.from);
         if (!!movingPiece && movingPiece.player === this.currentPlayer) {
             this.setPiece(move.to, movingPiece);
-            this.setPiece(fromSquare, undefined);
+            this.setPiece(move.from, undefined);
             if (move.capture) this.setPiece(move.to, undefined);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
         }

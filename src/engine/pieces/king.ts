@@ -14,7 +14,7 @@ export default class King extends Piece {
 
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
-                if (i !== 0 || j !== 0) this.tryAdd(moves, Square.at(square.row + i, square.col + j), board);
+                if (i !== 0 || j !== 0) this.tryAdd(moves, Square.at(square.row + i, square.col + j), square, board);
             }
         }
 
