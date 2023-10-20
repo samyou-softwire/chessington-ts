@@ -14,10 +14,10 @@ export default class Knight extends Piece {
         const moves: Square[] = [];
 
         for (const pattern of patterns) {
-            this.tryAdd(moves, Square.at(square.row + pattern[0], square.col + pattern[1]));
-            this.tryAdd(moves, Square.at(square.row - pattern[0], square.col + pattern[1]));
-            this.tryAdd(moves, Square.at(square.row + pattern[0], square.col - pattern[1]));
-            this.tryAdd(moves, Square.at(square.row - pattern[0], square.col - pattern[1]));
+            this.tryAdd(moves, Square.at(square.row + pattern[0], square.col + pattern[1]), board);
+            this.tryAdd(moves, Square.at(square.row - pattern[0], square.col + pattern[1]), board);
+            this.tryAdd(moves, Square.at(square.row + pattern[0], square.col - pattern[1]), board);
+            this.tryAdd(moves, Square.at(square.row - pattern[0], square.col - pattern[1]), board);
         }
 
         return moves;
