@@ -64,17 +64,32 @@ function onDrop(source, target) {
     const fromSquare = positionStringToSquare(source);
     const toSquare = positionStringToSquare(target);
     const pieceToMove = board.getPiece(fromSquare);
+    const foundMoves = pieceToMove.getAvailableMoves(board).filter(move => move.to.equals(toSquare));
     
-    if (!pieceToMove || !pieceToMove.getAvailableMoves(board).some(square => square.equals(toSquare))) {
+    if (!pieceToMove || foundMoves.length === 0) {
         return 'snapback';
     }
-    pieceToMove.moveTo(board, toSquare);
+
+    const move = foundMoves[0]; // it should only ever find one anyway
+
+    pieceToMove.moveTo(board, move);
     updateStatus();
 }
 
 function updateStatus() {
+    boardUI = ChessBoard(
+        'chess-board',
+        {
+            showNotation: false,
+            draggable: true,
+            position: boardToPositionObject(board),
+            onDragStart: onDragStart,
+            onDrop: onDrop
+        }
+    );
     const player = board.currentPlayer === Player.WHITE ? 'White' : 'Black';
     document.getElementById('turn-status').innerHTML = `${player} to move`;
+    document.getElementById('turn-count').innerHTML = `Turn ${board.move}`;
 }
 
 function boardInStartingPosition() {
@@ -111,15 +126,5 @@ function boardInStartingPosition() {
 
 export function createChessBoard() {
     board = boardInStartingPosition();
-    boardUI = ChessBoard(
-        'chess-board', 
-        {
-            showNotation: false,
-            draggable: true,
-            position: boardToPositionObject(board),
-            onDragStart: onDragStart,
-            onDrop: onDrop
-        }
-    );
     updateStatus();
 }

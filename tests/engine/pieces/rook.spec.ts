@@ -2,6 +2,8 @@ import Rook from '../../../src/engine/pieces/rook';
 import Board from '../../../src/engine/board';
 import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
+import Pawn from '../../../src/engine/pieces/pawn';
+import King from '../../../src/engine/pieces/king';
 
 describe('Rook', () => {
     let board: Board;
@@ -11,7 +13,7 @@ describe('Rook', () => {
         const rook = new Rook(Player.WHITE);
         board.setPiece(Square.at(1, 2), rook);
 
-        const moves = rook.getAvailableMoves(board);
+        const moves = rook.getAvailableMoveTos(board);
 
         const expectedMoves = [
             // Horizontal
@@ -27,8 +29,63 @@ describe('Rook', () => {
         const rook = new Rook(Player.WHITE);
         board.setPiece(Square.at(1, 2), rook);
 
-        const moves = rook.getAvailableMoves(board);
+        const moves = rook.getAvailableMoveTos(board);
 
         moves.should.have.length(14);
+    });
+
+    it('cannot move through friendly pieces', () => {
+        const rook = new Rook(Player.WHITE);
+        const friendlyPiece = new Pawn(Player.WHITE);
+        board.setPiece(Square.at(4, 4), rook);
+        board.setPiece(Square.at(4, 6), friendlyPiece);
+
+        const moves = rook.getAvailableMoveTos(board);
+
+        moves.should.not.deep.include(Square.at(4, 7));
+    });
+
+    it('cannot move through opposing pieces', () => {
+        const rook = new Rook(Player.WHITE);
+        const opposingPiece = new Pawn(Player.BLACK);
+        board.setPiece(Square.at(4, 4), rook);
+        board.setPiece(Square.at(4, 6), opposingPiece);
+
+        const moves = rook.getAvailableMoveTos(board);
+
+        moves.should.not.deep.include(Square.at(4, 7));
+    });
+
+    it('can take opposing pieces', () => {
+        const rook = new Rook(Player.WHITE);
+        const opposingPiece = new Pawn(Player.BLACK);
+        board.setPiece(Square.at(4, 4), rook);
+        board.setPiece(Square.at(4, 6), opposingPiece);
+
+        const moves = rook.getAvailableMoveTos(board);
+
+        moves.should.deep.include(Square.at(4, 6));
+    });
+
+    it('cannot take the opposing king', () => {
+        const rook = new Rook(Player.WHITE);
+        const opposingKing = new King(Player.BLACK);
+        board.setPiece(Square.at(4, 4), rook);
+        board.setPiece(Square.at(4, 6), opposingKing);
+
+        const moves = rook.getAvailableMoveTos(board);
+
+        moves.should.not.deep.include(Square.at(4, 6));
+    });
+
+    it('cannot take friendly pieces', () => {
+        const rook = new Rook(Player.WHITE);
+        const friendlyPiece = new Pawn(Player.WHITE);
+        board.setPiece(Square.at(4, 4), rook);
+        board.setPiece(Square.at(4, 6), friendlyPiece);
+
+        const moves = rook.getAvailableMoveTos(board);
+
+        moves.should.not.deep.include(Square.at(4, 6));
     });
 });
